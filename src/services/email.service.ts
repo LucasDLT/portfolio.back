@@ -7,6 +7,8 @@ import {
     OAUTH_REFRESH_TOKEN 
 } from "../env";
 import {EmailData} from "../types/email.types";
+import {mailingUser} from "../utils/mailing";
+
 
 
 const OAuth2 = google.auth.OAuth2;
@@ -69,15 +71,7 @@ export const sendEmail = async(
             from:MAIL_USERNAME,
             to:EmailData.email,
             subject:"Gracias por contactarme",
-            html:`
-             <p>Hola <strong>${EmailData.name}</strong>,</p>
-             <p>Gracias por tu consulta. Aca tenes una copia:</p>
-             <p><strong>Nombre:</strong> ${EmailData.name}</p>
-             <p><strong>Email:</strong> ${EmailData.email}</p>
-             <p><strong>Teléfono:</strong> ${EmailData.phone}</p>
-             <p><strong>Mensaje:</strong> ${EmailData.message}</p>
-             <p>Te responderé lo antes posible.</p>
-            `
+            html:mailingUser.html
         }
 
         const infoAdmin = await transporter.sendMail(mailToAdmin);
