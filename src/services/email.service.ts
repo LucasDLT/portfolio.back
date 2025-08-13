@@ -7,7 +7,7 @@ import {
     OAUTH_REFRESH_TOKEN 
 } from "../env";
 import {EmailData} from "../types/email.types";
-import {mailingUser} from "../utils/mailing";
+import {mailingUser, mailingAdmin} from "../utils/mailing";
 
 
 
@@ -57,21 +57,14 @@ export const sendEmail = async(
             to:MAIL_USERNAME,
             subject:"Nuevo mensaje desde el Portfolio a tu correo DEV",
             html:`
-            <h1>Informacion del usuario</h1>
-            <ul>
-                <li>Nombre: ${EmailData.name}</li>
-                <li>Email: ${EmailData.email}</li>
-                <li>Telefono: ${EmailData.phone}</li>
-            </ul>
-            <h2>Mensaje</h2>
-            <p>${EmailData.message}</p>
+                ${mailingAdmin.html.toString().replace("{{name}}",EmailData.name).replace("{{message}}",EmailData.message).replace("{{email}}",EmailData.email).replace("{{phone}}",EmailData.phone)}
             `
         }
         const mailToUser = {
             from:MAIL_USERNAME,
             to:EmailData.email,
             subject:"Gracias por contactarme",
-            html:mailingUser.html
+            html:`${mailingUser.html.toString().replace("{{name}}",EmailData.name).replace("{{message}}",EmailData.message)}`
         }
 
         const infoAdmin = await transporter.sendMail(mailToAdmin);
