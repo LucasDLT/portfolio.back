@@ -53,7 +53,7 @@ export const sendEmail = async(
             }
         })
         const mailToAdmin ={
-            from: `"${EmailData.name}">${EmailData.email}`,
+            from: `"${EmailData.name}" <${EmailData.email}>`,
             to:MAIL_USERNAME,
             subject:"Nuevo mensaje desde el Portfolio a tu correo DEV",
             html:`
