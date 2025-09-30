@@ -19,6 +19,8 @@ export const emailController = async (req: Request, res: Response)=>{
             phone
         }
         const response = await sendEmail(emailData);
+        console.log("Respuesta sendEmail:", response);
+
 
         if(response.success){
             res.status(200).json({
