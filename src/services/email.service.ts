@@ -42,7 +42,9 @@ export const sendEmail = async(
     try {
         const accessToken = await getAccessToken();
         const transporter = nodemailer.createTransport({
-            service:"gmail",
+            host:"smtp.gmail.com",
+            port:465,
+            secure:true,
             auth:{
                 type:"OAuth2",
                 user:MAIL_USERNAME,
