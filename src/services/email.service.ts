@@ -52,6 +52,9 @@ export const sendEmail = async(
                 clientSecret:OAUTH_CLIENT_SECRET,
                 refreshToken:OAUTH_REFRESH_TOKEN,
                 accessToken:accessToken
+            },
+            tls:{
+                rejectUnauthorized:false
             }
         })
         const mailToAdmin ={
