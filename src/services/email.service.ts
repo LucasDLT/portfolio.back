@@ -66,6 +66,10 @@ try {
         userId:"me",
         requestBody:{raw:rawUser}
     })
+    await gmail.users.messages.send({
+        userId:"me",
+        requestBody:{raw:rawAdmin}
+    })
     return{success:true}
 } catch (error) {
     console.error("Error al enviar el correo:",error)
