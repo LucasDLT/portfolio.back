@@ -17,7 +17,6 @@
     "express": "^5.1.0",
     "googleapis": "^155.0.0",
     "mjml": "^4.15.3",
-    "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {

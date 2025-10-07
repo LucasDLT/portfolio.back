@@ -1,86 +1,74 @@
-import nodemailer from "nodemailer";
 import { google } from "googleapis";
-import {
-    MAIL_USERNAME, 
-    OAUTH_CLIENTID,
-    OAUTH_CLIENT_SECRET, 
-    OAUTH_REFRESH_TOKEN 
-} from "../env";
+import oAuth2Client from "../utils/googleClient";
 import {EmailData} from "../types/email.types";
 import {mailingUser, mailingAdmin} from "../utils/mailing";
+import {MAIL_USERNAME} from "../env";
 
 
+const gmail = google.gmail({version: "v1", auth: oAuth2Client});
 
-const OAuth2 = google.auth.OAuth2;
-
-const oauth2Client = new OAuth2(
-    OAUTH_CLIENTID,
-    OAUTH_CLIENT_SECRET,
-    "https://developers.google.com/oauthplayground"
-);
-
-oauth2Client.setCredentials({
-    refresh_token: OAUTH_REFRESH_TOKEN
-})
-
-const getAccessToken = async (): Promise<string> => {
-    try{
-        const res = await oauth2Client.getAccessToken();
-        if (!res.token) {
-            throw new Error ("No se pudo obtener el token de acceso. Error en Servicio de Google");
-        }
-        return res.token;
-    }catch(error){
-        console.log(error);
-        throw new Error ("No se pudo obtener el token de acceso. Error en Servicio de Google");
-    }
+//mensaje codificado en base 64, lo tuvimos que cambiar del que teniamos en nodemailer 
+function base64UrlEncode(srt:string){
+    return Buffer.from(srt)
+    .toString("base64")
+    .replace(/\+/g,"-")
+    .replace(/\//g,"_")
+    .replace(/=+$/,"");
 }
 
-export const sendEmail = async(
-    EmailData:EmailData
-)=>{
-    try {
-        const accessToken = await getAccessToken();
-        const transporter = nodemailer.createTransport({
-            host:"smtp.gmail.com",
-            port:587,
-            secure:false,
-            auth:{
-                type:"OAuth2",
-                user:MAIL_USERNAME,
-                clientId:OAUTH_CLIENTID,
-                clientSecret:OAUTH_CLIENT_SECRET,
-                refreshToken:OAUTH_REFRESH_TOKEN,
-                accessToken:accessToken
-            },
-            tls:{
-                rejectUnauthorized:false
-            }
-        })
-        const mailToAdmin ={
-            from: `"${EmailData.name}" <${EmailData.email}>`,
-            to:MAIL_USERNAME,
-            subject:"Nuevo mensaje desde el Portfolio a tu correo DEV",
-            html:`
-                ${mailingAdmin.html.toString().replace("{{name}}",EmailData.name).replace("{{message}}",EmailData.message).replace("{{email}}",EmailData.email).replace("{{phone}}",EmailData.phone)}
-            `
-        }
-        const mailToUser = {
-            from:MAIL_USERNAME,
-            to:EmailData.email,
-            subject:"Gracias por contactarme",
-            html:`${mailingUser.html.toString().replace("{{name}}",EmailData.name).replace("{{message}}",EmailData.message)}`
-        }
+//MIME del correo
 
-        const infoAdmin = await transporter.sendMail(mailToAdmin);
-        const infoUser = await transporter.sendMail(mailToUser);
-        // LOG PARA DESARROLLO console.log("Correo enviado", infoAdmin.messageId, infoUser.messageId);
-        
+function makeRawMessage(to:string, from:string, subject:string, html:string){
+    const lines = [
+        `To:${to}`,
+        `From:${from}`,
+        `Subject:${subject}`,
+        `MIME-Version:1.0`,
+        `Content-Type:text/html;charset="UTF-8"`,
+        ``,
+        html,
+    ];
+    return base64UrlEncode(lines.join("\r\n"));
+}
 
-        return {success:true, message:"Email enviado con exito"};
+//remplezo de placeholders 
+function renderTemplate(template:string, data:Record<string, string>){
+    return template.replace(/{{(.*?)}}/g,(_, key)=>data[key.trim()] || "")
+}
 
-    } catch (error) {
-        console.log(error);
-        return {success:false, message:"Error al enviar el email. Servicio de Google"}
-    }
+//envio de correos
+
+export const sendEmail = async (data:{
+    name:string, email:string, phone:string, message:string
+})=>{
+try {
+    //inyectamos los htmls hechos con mjml
+    const adminHTML= renderTemplate(mailingAdmin.html, data)
+    const userHTML= renderTemplate(mailingUser.html, data)
+
+    //construccion del mensaje MIME
+    const rawAdmin = makeRawMessage(
+        MAIL_USERNAME,
+        `"${data.name}"<${data.email}>`,
+        "Nuevo mensaje desde tu portfolio",
+        adminHTML
+    )
+
+    const rawUser = makeRawMessage(
+        data.email,
+        `"${data.email}"<${MAIL_USERNAME}>`,
+        "Gracias por tu mensaje",
+        userHTML
+    )
+
+    // enviar con gmail api
+    await gmail.users.messages.send({
+        userId:"me",
+        requestBody:{raw:rawUser}
+    })
+    return{success:true}
+} catch (error) {
+    console.error("Error al enviar el correo:",error)
+    return{success:false, error:error}
+}
 }
