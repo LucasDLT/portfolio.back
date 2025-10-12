@@ -5,8 +5,8 @@ import emailRoutes from "./routes/email.routes";
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3000"
-}));
+    origin: ["http://localhost:3000", "https://lucasebasdev.vercel.app"]
+}, ));
 app.use(express.json());
 
 app.use("/email", emailRoutes);
