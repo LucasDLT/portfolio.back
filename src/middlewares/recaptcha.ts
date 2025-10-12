@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { RECAPTCHA_SECRET_KEY } from '../env';
 
-const recaptcha = async (req: Request, res: Response, next: NextFunction) => {
+export const recaptcha = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const token = (req.body && (req.body.recaptcha || req.body.recaptchaToken)) || req.headers["x-recaptcha-token"]
@@ -41,6 +41,9 @@ const recaptcha = async (req: Request, res: Response, next: NextFunction) => {
 
         if (typeof data.score === "number" && data.score < MIN_SCORE) {
         return res.status(403).json({ message: "reCAPTCHA: comportamiento sospechoso (score bajo)", score: data.score });
+        }
+        if (data.action !== "contact") {
+        return res.status(403).json({ message: "reCAPTCHA: accion no permitida, se espera contact y se recibio:", action: data.action });
         }
         res.locals.recaptcha = {succes: data.success, score:data.score, action:data.action}
 
