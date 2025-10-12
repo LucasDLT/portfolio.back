@@ -1,6 +1,5 @@
 import { google } from "googleapis";
 import oAuth2Client from "../utils/googleClient";
-import {EmailData} from "../types/email.types";
 import {mailingUser, mailingAdmin} from "../utils/mailing";
 import {MAIL_USERNAME} from "../env";
 
