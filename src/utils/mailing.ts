@@ -23,12 +23,8 @@ export const mailingUser = mjml2html(`
       background-position="center"
       padding="60px 0"
     >
-      <mj-column >
-        <mj-text
-          align="center"
-          color="white"
-          font-size="30px"
-        >
+      <mj-column>
+        <mj-text align="center" color="white" font-size="30px">
           ¡Gracias por tu mensaje!
         </mj-text>
       </mj-column>
@@ -42,11 +38,16 @@ export const mailingUser = mjml2html(`
       <mj-column width="500px" background-color="#60606040" border-radius="5px">
         <mj-text color="white"> Hola <strong>{{name}}</strong>, </mj-text>
 
-        <mj-text color="white" >
+        <mj-text color="white">
           Gracias por comunicarte conmigo. Me escribiste lo siguiente:
         </mj-text>
 
-        <mj-text color="white" font-style="italic" padding="10px 0 20px 0" align="center">
+        <mj-text
+          color="white"
+          font-style="italic"
+          padding="10px 0 20px 0"
+          align="center"
+        >
           {{message}}
         </mj-text>
 
@@ -59,45 +60,39 @@ export const mailingUser = mjml2html(`
         <mj-text color="white" padding-top="15px"> — Lucas Sebas </mj-text>
       </mj-column>
       <mj-column>
-        <mj-text
-          align="center"
-          color="black"
-          font-size="18px"
-        >
-         Desarrollador Web  Diseñando Experiencias 
+        <mj-text align="center" color="black" font-size="18px">
+          Desarrollador Web Diseñando Experiencias
         </mj-text>
       </mj-column>
     </mj-section>
 
-
-
     <!-- Footer con enlaces -->
-    <mj-section 
-    background-url="https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGNvZGlnb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600"  
-    background-size="cover"
+    <mj-section
+      background-url="https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGNvZGlnb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600"
+      background-size="cover"
       background-repeat="no-repeat"
       background-position="bottom"
-      padding="1px 0 0 0">
+      padding="1px 0 0 0"
+    >
       <mj-group>
         <mj-column width="33%">
           <mj-social icon-size="24px" mode="horizontal" align="center">
             <mj-social-element
               name="linkedin"
               href="https://www.linkedin.com/lucas-sebas/"
-              background-color="transparent"
+              background-color="black"
             ></mj-social-element>
           </mj-social>
         </mj-column>
 
         <mj-column width="33%" vertical-align="middle">
-          <mj-button
+          <mj-social icon-size="30px" mode="horizontal" align="center">
+            <mj-social-element 
+            name="web"
             href="https://lucasebasdev.vercel.app/"
-            border="1px solid #c6c5c5ff"
-            background-color="#606060"
-            color="black"
-          >
-            Portfolio
-          </mj-button>
+            background-color="black">
+          <mj-social-element>
+          </mj-social>
         </mj-column>
 
         <mj-column width="33%">
@@ -105,7 +100,7 @@ export const mailingUser = mjml2html(`
             <mj-social-element
               name="github"
               href="https://github.com/LucasDLT"
-              background-color="transparent"
+              background-color="black"
             ></mj-social-element>
           </mj-social>
         </mj-column>
@@ -121,9 +116,7 @@ export const mailingUser = mjml2html(`
       </mj-column>
     </mj-section>
   </mj-body>
-</mjml>
-
-    
+</mjml>   
     `);
 
 export const mailingAdmin = mjml2html(`
