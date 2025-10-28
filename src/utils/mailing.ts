@@ -80,7 +80,7 @@ export const mailingUser = mjml2html(`
             <mj-social-element
               name="linkedin"
               href="https://www.linkedin.com/lucas-sebas/"
-              background-color="black"
+              background-color="transparent"
             ></mj-social-element>
           </mj-social>
         </mj-column>
@@ -90,7 +90,7 @@ export const mailingUser = mjml2html(`
             <mj-social-element 
             name="web"
             href="https://lucasebasdev.vercel.app/"
-            background-color="black">
+            background-color="transparent">
           <mj-social-element>
           </mj-social>
         </mj-column>
@@ -100,7 +100,7 @@ export const mailingUser = mjml2html(`
             <mj-social-element
               name="github"
               href="https://github.com/LucasDLT"
-              background-color="black"
+              background-color="transparent"
             ></mj-social-element>
           </mj-social>
         </mj-column>
